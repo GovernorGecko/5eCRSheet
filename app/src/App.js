@@ -1,61 +1,15 @@
 import * as React from "react";
 import { Box } from "@mui/material";
 
+// Components
+import { GetStatFromSkill } from "./core/Skills";
+import { GetStatMod, GetStatModAsString } from "./core/Stats";
 import StatBlock from "./components/StatBlock";
-import Skills from "./core/Skills";
-import Stats from "./core/Stats";
 
-const json = {
-  name: 'Steve "The Hair" Harrington',
-  size: "Medium",
-  race: "Human",
-  alignment: "Neutral Good",
-  armorClass: 16,
-  armor: "amazing hair and good looks",
-  hitPoints: 84,
-  hitDie: 8,
-  hitDieCount: 13,
-  hitDieBonus: 26,
-  movement: [
-    {
-      type: "walk",
-      value: 30,
-    },
-    { type: "swim", value: 30 },
-  ],
-  attributes: [
-    {
-      type: Stats.STR,
-      value: 14,
-    },
-    {
-      type: Stats.DEX,
-      value: 16,
-    },
-    {
-      type: Stats.CON,
-      value: 15,
-    },
-    {
-      type: Stats.INT,
-      value: 10,
-    },
-    {
-      type: Stats.WIS,
-      value: 14,
-    },
-    {
-      type: Stats.CHA,
-      value: 18,
-    },
-  ],
-  proficiencyBonus: 3,
-  savingThrows: [Stats.STR, Stats.CON, Stats.WIS],
-  skills: [Skills.ATHLETICS, Skills.INSIGHT, Skills.STEALTH],
-  damageResistances: ["bludgeoning"],
-  senses: [],
-  languages: ["Common", "all five love languages"],
-};
+// Json
+import SteveHarrington from "./json/SteveHarrington";
+
+const json = SteveHarrington;
 
 function App() {
   return (
@@ -79,6 +33,29 @@ function App() {
         })}
       </Box>
       <StatBlock attributes={json.attributes} />
+      <Box>
+        Saving Throws
+        {json.savingThrows.map((savingThrow, index) => {
+          return `${savingThrow.name} ${GetStatModAsString(
+            GetStatMod(savingThrow, json.attributes) + json.proficiencyBonus
+          )} `;
+        })}
+      </Box>
+      <Box>
+        Skills
+        {json.skills.map((skill, index) => {
+          return `${skill.name} ${GetStatModAsString(
+            GetStatMod(GetStatFromSkill(skill), json.attributes) +
+              json.proficiencyBonus
+          )} `;
+        })}
+      </Box>
+      <Box>
+        Damage Resistances
+        {json.damageResistances.map((damagaResistance, index) => {
+          return damagaResistance;
+        })}
+      </Box>
     </Box>
   );
 }
